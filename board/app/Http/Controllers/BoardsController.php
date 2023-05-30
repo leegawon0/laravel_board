@@ -1,10 +1,22 @@
 <?php
+/************************************************
+ * 프로젝트명   : laravel_board
+ * 디렉토리     : Controllers
+ * 파일명       : BoardsController.php
+ * 이력         : v001 0526 GW.Lee new
+ *              v002 0530 GW.Lee 유효성 체크 추가
+ ************************************************/
+
+// v002 del
+// v002 update start
+// v002 update end
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Boards;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator; // v002 add
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -39,6 +51,13 @@ class BoardsController extends Controller
      */
     public function store(Request $req)
     {
+        // v002 add start
+        $req->validate([
+            'title' => 'required|between:3,20'
+            ,'content' => 'required|max:1000'
+        ]);
+        // v002 add end
+        
         $boards = new Boards([
             'title' => $req->input('title')
             , 'content' => $req->input('content')
@@ -81,7 +100,34 @@ class BoardsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    { 
+    {
+        // ***** v002 add start *****
+        $arr = ['id' => $id];
+        // $request->merge($arr);
+        $request->request->add($arr);
+        $request->validate([
+            'title' => 'required|between:3,20'
+            ,'content' => 'required|max:1000'
+            ,'id' => 'required|integer'
+        ]);
+        // ***** v002 add end *****
+
+        // 유효성 검사 방법 2
+        // $validator = Validator::make(
+        //     $request->only('id', 'title', 'content')
+        //     ,[
+        //         'title' => 'required|between:3,20'
+        //         ,'content' => 'required|max:1000'
+        //         ,'id' => 'required|integer'
+        //     ]
+        // );
+        // if($validator->fails()) {
+        //     return redirect()
+        //     ->back()
+        //     ->withErrors($validator)
+        //     ->withInput($request->only('title', 'content'));
+        // }
+
         // $boards = DB::table('boards')
         // ->where('id', $id)
         // ->update(['title' => $request->title, 'content' => $request->content]);
