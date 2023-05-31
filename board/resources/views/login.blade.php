@@ -4,7 +4,7 @@
 
 @section('contents')
     <h1>Login</h1>
-    <div>{{isset($success) ? $success : ""}}</div>
+    <div>{!!session()->has('success') ? session('success') : ""!!}</div>
     @include('layout.errorsvalidate')
     <form action="{{route('users.login.post')}}" method="post">
         @csrf
