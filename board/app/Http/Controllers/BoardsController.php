@@ -12,7 +12,7 @@
 // v002 update end
 
 namespace App\Http\Controllers;
-
+  
 use Illuminate\Http\Request;
 use App\Models\Boards;
 use Illuminate\Support\Facades\DB;
